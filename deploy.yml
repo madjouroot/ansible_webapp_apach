@@ -1,13 +1,15 @@
 ---
 - name: "install apach with docker"
   hosts: prod
+  become: true
+  vars:
+    ansible_sudo_pass: admin
   pre_tasks:
   - name: "install  EPEL Repository"
     package:
       name: epel-release
       state: present
-    when: 
-      ansible_distribution  == 'CentOS'
+    when:  ansible_distribution  == 'CentOS'
   - name: "Install dependencies"
     yum:
       name: python-pip
@@ -16,7 +18,6 @@
   - name: "install pip"
     pip:
       name: docker-py
-
   tasks:
   - name: "create contenair apach"
     docker_container:
@@ -25,6 +26,7 @@
       expose:
         - 80
       ports:
-        - "80:80"
+        - "80:8"
+
 
 
