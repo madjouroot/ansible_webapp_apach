@@ -3,7 +3,7 @@
   hosts: prod
   become: true
   vars:
-    ansible_sudo_pass: admin
+    ansible_sudo_pass: vagrant
   pre_tasks:
   - name: "install  EPEL Repository"
     package:
@@ -12,21 +12,20 @@
     when:  ansible_distribution  == 'CentOS'
   - name: "Install dependencies"
     yum:
-      name: python-pip
+      name: python3-pip
       state: present
       update_cache: yes
   - name: "install pip"
     pip:
       name: docker-py
+      executable: pip3
   tasks:
   - name: "create contenair apach"
     docker_container:
       name: webapp
       image: httpd
-      expose:
-        - 80
       ports:
-        - "80:8"
+        - "80:80"
 
 
 
