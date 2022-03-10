@@ -5,11 +5,16 @@
   vars:
     ansible_sudo_pass: vagrant
   pre_tasks:
-  - name: "install  EPEL Repository"
+  - name: "install  EPEL Repository and others"
     package:
-      name: epel-release
-      state: present
+     # name: epel-release
+       name: "{{ item }}"
+       state: present
     when:  ansible_distribution  == 'CentOS'
+    loop:
+    - epel-release
+    - git
+    - wget
   - name: "Install dependencies"
     yum:
       name: python3-pip
@@ -20,12 +25,19 @@
       name: docker-py
       executable: pip3
   tasks:
+  - name: "copy website templat "
+    template:
+      src: index.html.j2
+      dest: /home/vagrant/index.html
   - name: "create contenair apach"
     docker_container:
       name: webapp
       image: httpd
       ports:
         - "80:80"
+      volumes:
+        - /home/vagrant/index.html:/usr/local/apache2/htdocs/index.html
+
 
 
 
