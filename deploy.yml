@@ -2,8 +2,10 @@
 - name: "install apach with docker"
   hosts: prod
   become: true
-  vars:
-    ansible_sudo_pass: vagrant
+  vars_files:
+  - files/secrets/credentials.yml
+  #vars:
+   # ansible_sudo_pass: vagrant
   pre_tasks:
   - name: "install  EPEL Repository and others"
     package:
