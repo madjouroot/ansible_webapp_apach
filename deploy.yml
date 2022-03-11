@@ -1,7 +1,7 @@
 ---
 - name: "install apach with docker"
   hosts: prod
-  become: true
+  become: yes
   vars_files:
   - files/secrets/credentials.yml
   #vars:
