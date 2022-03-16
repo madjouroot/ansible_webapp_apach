@@ -3,6 +3,7 @@
   become: true
   vars:
     system_user: vagrant
+    dir: /home/vagrant/compose-wordpress
   vars_files:
   - files/secrets/credentials.yml
   pre_tasks:
@@ -10,5 +11,23 @@
     user:
       name: www-data
       state: present
+  - name: "Install docker-compose"
+    get_url: 
+      url : https://github.com/docker/compose/releases/download/1.25.1-rc1/docker-compose-Linux-x86_64 
+      dest: /usr/bin/docker-compose
+    # mode: 'u+x,g+x'
+      mode: 0755
+      force: yes
+    when: 
+      docker_compose_current_version is not defined
+      or docker_compose_current_version is version(docker_compose_version, '<')
+  - name: "Run docker-compose up"
+    shell:
+      cmd: "/usr/bin/docker-compose -f docker-compose.yml up -d"
+    args:
+      chdir: "{{ dir }}"
+  
+
+      
   roles:
   -  { role: ansible-role-containerized-wordpress  }
